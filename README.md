@@ -25,7 +25,6 @@ All you need is to `require` the `react-native-multipeer` module and then you ca
 var React = require('react-native');
 var {
   AppRegistry,
-  ListView,
   StyleSheet,
   Text,
   View,
@@ -36,7 +35,7 @@ var MultipeerConnectivity = require('react-native-multipeer');
 function getStateFromSources() {
   var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return {
-      dataSource: ds.cloneWithRows(MultipeerConnectivity.getAllPeers())
+      dataSource: ds.cloneWithRows(_.values(MultipeerConnectivity.getAllPeers()))
     };
 }
 
@@ -45,8 +44,8 @@ var peerApp = React.createClass({
     return getStateFromSources()
   },
   componentDidMount() {
-    MultipeerConnectivity.on('peerFound', this._onChange);
-    MultipeerConnectivity.on('peerLost', this._onChange);
+    MultipeerConnectivity.on('peerFound', this._onChange());
+    MultipeerConnectivity.on('peerLost', this._onChange());
     MultipeerConnectivity.on('invite', ((event) => {
       // Automatically accept invitations
       MultipeerConnectivity.rsvp(event.invite.id, true);
